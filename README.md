@@ -6,11 +6,11 @@
 
 ## Definición del problema 1 que se desean abordar:
 
-un grupo de aficionados cientificos quiere que su club de ciencia ver videos de canales de YouTube de ciencia, sin embargo, no todos tienen el mismo interés cientifico, es decir no a todos les gusta la astronomía, la biología o la física, por lo que deciden crear un algoritmo que solo les envié los videos que quieren recibir con los temas cientificos interés.
+un grupo de aficionados cientificos quiere en su club ver videos de canales de YouTube de ciencia, sin embargo, no todos tienen el mismo interés cientifico, es decir no a todos les gusta la astronomía, la biología o la física, por lo que deciden crear un algoritmo que solo les envié los videos que quieren recibir con los temas cientificos interés.
 
-Queriendo tener este comportamiento se plantea usar el patrón Observer.
+Queriendo tener este comportamiento se plantean usar el patrón Observer.
 
-Lo primero es definir que las categorías cientificas de videos se quiere recibir, se hace el uso de enum para respetar el principio SOLID de abierto/cerrado:
+Lo primero es definir las categorías cientificas de los videos que se quiere recibir, se hace el uso de enum para respetar el principio SOLID de abierto/cerrado:
 
 
 ```C#
@@ -26,116 +26,7 @@ public enum ScienceCategory
 ```
 
 
-
-<div>
-    <div id='dotnet-interactive-this-cell-209.Microsoft.DotNet.Interactive.Http.HttpPort' style='display: none'>
-        The below script needs to be able to find the current output cell; this is an easy method to get it.
-    </div>
-    <script type='text/javascript'>
-async function probeAddresses(probingAddresses) {
-    function timeout(ms, promise) {
-        return new Promise(function (resolve, reject) {
-            setTimeout(function () {
-                reject(new Error('timeout'))
-            }, ms)
-            promise.then(resolve, reject)
-        })
-    }
-
-    if (Array.isArray(probingAddresses)) {
-        for (let i = 0; i < probingAddresses.length; i++) {
-
-            let rootUrl = probingAddresses[i];
-
-            if (!rootUrl.endsWith('/')) {
-                rootUrl = `${rootUrl}/`;
-            }
-
-            try {
-                let response = await timeout(1000, fetch(`${rootUrl}discovery`, {
-                    method: 'POST',
-                    cache: 'no-cache',
-                    mode: 'cors',
-                    timeout: 1000,
-                    headers: {
-                        'Content-Type': 'text/plain'
-                    },
-                    body: probingAddresses[i]
-                }));
-
-                if (response.status == 200) {
-                    return rootUrl;
-                }
-            }
-            catch (e) { }
-        }
-    }
-}
-
-function loadDotnetInteractiveApi() {
-    probeAddresses(["http://192.168.1.1:2048/", "http://127.0.0.1:2048/"])
-        .then((root) => {
-        // use probing to find host url and api resources
-        // load interactive helpers and language services
-        let dotnetInteractiveRequire = require.config({
-        context: '209.Microsoft.DotNet.Interactive.Http.HttpPort',
-                paths:
-            {
-                'dotnet-interactive': `${root}resources`
-                }
-        }) || require;
-
-            window.dotnetInteractiveRequire = dotnetInteractiveRequire;
-
-            window.configureRequireFromExtension = function(extensionName, extensionCacheBuster) {
-                let paths = {};
-                paths[extensionName] = `${root}extensions/${extensionName}/resources/`;
-                
-                let internalRequire = require.config({
-                    context: extensionCacheBuster,
-                    paths: paths,
-                    urlArgs: `cacheBuster=${extensionCacheBuster}`
-                    }) || require;
-
-                return internalRequire
-            };
-        
-            dotnetInteractiveRequire([
-                    'dotnet-interactive/dotnet-interactive'
-                ],
-                function (dotnet) {
-                    dotnet.init(window);
-                },
-                function (error) {
-                    console.log(error);
-                }
-            );
-        })
-        .catch(error => {console.log(error);});
-    }
-
-// ensure `require` is available globally
-if ((typeof(require) !==  typeof(Function)) || (typeof(require.config) !== typeof(Function))) {
-    let require_script = document.createElement('script');
-    require_script.setAttribute('src', 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js');
-    require_script.setAttribute('type', 'text/javascript');
-    
-    
-    require_script.onload = function() {
-        loadDotnetInteractiveApi();
-    };
-
-    document.getElementsByTagName('head')[0].appendChild(require_script);
-}
-else {
-    loadDotnetInteractiveApi();
-}
-
-    </script>
-</div>
-
-
-Después de esto se define el video obtenido:
+Después de esto se define la clase video:
 
 
 ```C#
@@ -388,7 +279,7 @@ foreach (var video in videos)
       -> [Notificación] María López recibe: 'Mutaciones genéticas raras' de BioCurioso [Biology]
 
 
-Ahora supongamos que uno de los miebros ha encontrado un nuevo interés cientifico y a su vez ha ingresado un nuevo miembro al club, entonces para esto se tendría que atualizar las subscripciones, para la proxima entrega se tendría.
+Ahora supongamos que uno de los miebros ha encontrado un nuevo interés cientifico y a su vez, ha ingresado un nuevo miembro al club, entonces para esto se tendría que atualizar las subscripciones, para la proxima entrega se tendría.
 
 Actualmente se tiene que para los miembros son y se interesan por:
 
@@ -416,7 +307,7 @@ foreach (var member in members)
 
 Además de que tenemos los siguientes grupos:
 
-ahora se añade una nueva preferencia para María y un nuevo miembro al grupo que se va a subscribir a todo, a demás Wilson se va desuscribir de física ya que no le da tiempo de ver este tema:
+ahora se añade una nueva preferencia para María y un nuevo miembro al grupo que se va a subscribir a todo, a demás Wilson se va desubcribir de física ya que no le da tiempo de ver este tema:
 
 
 ```C#
@@ -453,7 +344,7 @@ wilson.RemoveInterest(ScienceCategory.Physics, groups);  // Elimina el interés 
     [Usuario] Wilson Vargas ha eliminado el interés: Physics
 
 
-Ahora actualizados los miembros y sus grupos de interés se tiene
+Una vez actualizados los miembros y sus grupos de interés se tiene:
 
 
 ```C#
@@ -484,11 +375,76 @@ foreach (var member in members)
         - Geology
 
 
+### Diagrama UML:
+
+
+```mermaid
+classDiagram
+    class ISubscriber {
+        <<interface>>
+        +Update(video: Video)
+    }
+    
+    class IPublisher {
+        <<interface>>
+        +Attach(subscriber: ISubscriber)
+        +Detach(subscriber: ISubscriber)
+        +Notify(video: Video)
+    }
+
+    class ScienceGroup {
+        -category: ScienceCategory
+        -subscribers: List<ISubscriber>
+        +Category: ScienceCategory
+        +Attach(subscriber: ISubscriber)
+        +Detach(subscriber: ISubscriber)
+        +Notify(video: Video)
+    }
+
+    class ScienceFan {
+        -name: string
+        -interests: List<ScienceCategory>
+        +Name: string
+        +Interests: List<ScienceCategory>
+        +Update(video: Video)
+        +AddInterest(category: ScienceCategory, groups: List<ScienceGroup>)
+        +RemoveInterest(category: ScienceCategory, groups: List<ScienceGroup>)
+    }
+
+    class VideoPublisher {
+        -groups: List<ScienceGroup>
+        +GetGroupFor(video: Video): ScienceGroup
+    }
+
+    class Video {
+        +Title: string
+        +Description: string
+        +Category: ScienceCategory
+    }
+
+    class ScienceCategory {
+        <<enum>>
+        Astronomy
+        Physics
+        Biology
+    }
+
+    IPublisher <|.. ScienceGroup
+    ISubscriber <|.. ScienceFan
+    ScienceGroup o-- ISubscriber
+    VideoPublisher o-- ScienceGroup
+    ScienceGroup -- ScienceCategory
+    ScienceFan -- ScienceCategory
+    Video -- ScienceCategory
+```
+
+
+
 ## Definición del problema 2 que se desean abordar:
 
 El soporte técnico de una empresa decidió implementar una solución para el restablecimiento de contraseñas de sus aplicativos empresariales, sin embargo si el usuario no es capaz de resolver el problema por esos medios, ellos deben actuar, usualmente ocurre muy esporadicamente ya que los métodos de restablecimiento son muy efectivos y seguros.
 
-Para esta solución implementaron un patrón de Chain of Responsability, para entenderlo se va a plantear un caso de alguién usandolo.
+Para esta solución implementaron un patrón de Chain of Responsability y para entenderlo se va a plantear un caso de alguién usando el sistema.
 
 Existe un empleado que a raíz de la inseguridad le robaron sus pertenencias, entre ellos su computador y celular de trabajo, el quiere restablecer sus accesos para evitar que la información de la empresa caiga en malas manos por lo que decide hacer el proceso de restablecimiento.
 
@@ -508,115 +464,6 @@ public partial class PasswordResetRequest
 ```
 
 
-
-<div>
-    <div id='dotnet-interactive-this-cell-231.Microsoft.DotNet.Interactive.Http.HttpPort' style='display: none'>
-        The below script needs to be able to find the current output cell; this is an easy method to get it.
-    </div>
-    <script type='text/javascript'>
-async function probeAddresses(probingAddresses) {
-    function timeout(ms, promise) {
-        return new Promise(function (resolve, reject) {
-            setTimeout(function () {
-                reject(new Error('timeout'))
-            }, ms)
-            promise.then(resolve, reject)
-        })
-    }
-
-    if (Array.isArray(probingAddresses)) {
-        for (let i = 0; i < probingAddresses.length; i++) {
-
-            let rootUrl = probingAddresses[i];
-
-            if (!rootUrl.endsWith('/')) {
-                rootUrl = `${rootUrl}/`;
-            }
-
-            try {
-                let response = await timeout(1000, fetch(`${rootUrl}discovery`, {
-                    method: 'POST',
-                    cache: 'no-cache',
-                    mode: 'cors',
-                    timeout: 1000,
-                    headers: {
-                        'Content-Type': 'text/plain'
-                    },
-                    body: probingAddresses[i]
-                }));
-
-                if (response.status == 200) {
-                    return rootUrl;
-                }
-            }
-            catch (e) { }
-        }
-    }
-}
-
-function loadDotnetInteractiveApi() {
-    probeAddresses(["http://192.168.1.1:2048/", "http://127.0.0.1:2048/"])
-        .then((root) => {
-        // use probing to find host url and api resources
-        // load interactive helpers and language services
-        let dotnetInteractiveRequire = require.config({
-        context: '231.Microsoft.DotNet.Interactive.Http.HttpPort',
-                paths:
-            {
-                'dotnet-interactive': `${root}resources`
-                }
-        }) || require;
-
-            window.dotnetInteractiveRequire = dotnetInteractiveRequire;
-
-            window.configureRequireFromExtension = function(extensionName, extensionCacheBuster) {
-                let paths = {};
-                paths[extensionName] = `${root}extensions/${extensionName}/resources/`;
-                
-                let internalRequire = require.config({
-                    context: extensionCacheBuster,
-                    paths: paths,
-                    urlArgs: `cacheBuster=${extensionCacheBuster}`
-                    }) || require;
-
-                return internalRequire
-            };
-        
-            dotnetInteractiveRequire([
-                    'dotnet-interactive/dotnet-interactive'
-                ],
-                function (dotnet) {
-                    dotnet.init(window);
-                },
-                function (error) {
-                    console.log(error);
-                }
-            );
-        })
-        .catch(error => {console.log(error);});
-    }
-
-// ensure `require` is available globally
-if ((typeof(require) !==  typeof(Function)) || (typeof(require.config) !== typeof(Function))) {
-    let require_script = document.createElement('script');
-    require_script.setAttribute('src', 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js');
-    require_script.setAttribute('type', 'text/javascript');
-    
-    
-    require_script.onload = function() {
-        loadDotnetInteractiveApi();
-    };
-
-    document.getElementsByTagName('head')[0].appendChild(require_script);
-}
-else {
-    loadDotnetInteractiveApi();
-}
-
-    </script>
-</div>
-
-
 ### La interfaz handler
 Esta es la interfaz común a todos los handler concretos. Normalmente contiene un único método para manejar solicitudes, pero en ocasiones también puede contar con otro método para establecer el siguiente handler de la cadena, como en este caso:
 
@@ -631,7 +478,7 @@ public interface IPasswordResetHandler
 ```
 
 ### Hadler Base
-El handler base no es más que una clase concreta que ayuda a implementar los métodos en común y evitar la duplicidad de código, especialemnte para enviar la solicitud al siguiente handler.
+El handler base no es más que una clase abstracta que ayuda a implementar los métodos en común y evitar la duplicidad de código, especialemnte para enviar la solicitud al siguiente handler.
 
 
 ```C#
@@ -776,120 +623,6 @@ public partial class PasswordResetRequest
         public bool NeedsHumanSupport => !HasEmailToken && !PassedMFA && !VerifiedViaCorporateApp && !AnsweredSecurityQuestions;
     }
 
-```
-
-
-
-<div>
-    <div id='dotnet-interactive-this-cell-332.Microsoft.DotNet.Interactive.Http.HttpPort' style='display: none'>
-        The below script needs to be able to find the current output cell; this is an easy method to get it.
-    </div>
-    <script type='text/javascript'>
-async function probeAddresses(probingAddresses) {
-    function timeout(ms, promise) {
-        return new Promise(function (resolve, reject) {
-            setTimeout(function () {
-                reject(new Error('timeout'))
-            }, ms)
-            promise.then(resolve, reject)
-        })
-    }
-
-    if (Array.isArray(probingAddresses)) {
-        for (let i = 0; i < probingAddresses.length; i++) {
-
-            let rootUrl = probingAddresses[i];
-
-            if (!rootUrl.endsWith('/')) {
-                rootUrl = `${rootUrl}/`;
-            }
-
-            try {
-                let response = await timeout(1000, fetch(`${rootUrl}discovery`, {
-                    method: 'POST',
-                    cache: 'no-cache',
-                    mode: 'cors',
-                    timeout: 1000,
-                    headers: {
-                        'Content-Type': 'text/plain'
-                    },
-                    body: probingAddresses[i]
-                }));
-
-                if (response.status == 200) {
-                    return rootUrl;
-                }
-            }
-            catch (e) { }
-        }
-    }
-}
-
-function loadDotnetInteractiveApi() {
-    probeAddresses(["http://192.168.1.1:2048/", "http://127.0.0.1:2048/"])
-        .then((root) => {
-        // use probing to find host url and api resources
-        // load interactive helpers and language services
-        let dotnetInteractiveRequire = require.config({
-        context: '332.Microsoft.DotNet.Interactive.Http.HttpPort',
-                paths:
-            {
-                'dotnet-interactive': `${root}resources`
-                }
-        }) || require;
-
-            window.dotnetInteractiveRequire = dotnetInteractiveRequire;
-
-            window.configureRequireFromExtension = function(extensionName, extensionCacheBuster) {
-                let paths = {};
-                paths[extensionName] = `${root}extensions/${extensionName}/resources/`;
-                
-                let internalRequire = require.config({
-                    context: extensionCacheBuster,
-                    paths: paths,
-                    urlArgs: `cacheBuster=${extensionCacheBuster}`
-                    }) || require;
-
-                return internalRequire
-            };
-        
-            dotnetInteractiveRequire([
-                    'dotnet-interactive/dotnet-interactive'
-                ],
-                function (dotnet) {
-                    dotnet.init(window);
-                },
-                function (error) {
-                    console.log(error);
-                }
-            );
-        })
-        .catch(error => {console.log(error);});
-    }
-
-// ensure `require` is available globally
-if ((typeof(require) !==  typeof(Function)) || (typeof(require.config) !== typeof(Function))) {
-    let require_script = document.createElement('script');
-    require_script.setAttribute('src', 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js');
-    require_script.setAttribute('type', 'text/javascript');
-    
-    
-    require_script.onload = function() {
-        loadDotnetInteractiveApi();
-    };
-
-    document.getElementsByTagName('head')[0].appendChild(require_script);
-}
-else {
-    loadDotnetInteractiveApi();
-}
-
-    </script>
-</div>
-
-
-
-```C#
 
 // Crear un nuevo handler
 public class SecurityQuestionsHandler : PasswordResetHandler
@@ -937,8 +670,58 @@ emailHandler.Handle(request);
     [CorporateAppHandler] App corporativa no verificada, pasando al siguiente.
     [SecurityQuestionsHandler] Contraseña restablecida con preguntas de seguridad.
 
+### Diagrama UML
 
-## Definición del problema 2 que se desean abordar:
+```mermaid
+classDiagram
+    class IHandler {
+        <<interface>>
+        +SetNext(handler: IHandler): IHandler
+        +Handle(request: PasswordResetRequest)
+    }
+
+    class AbstractHandler {
+        <<abstract>>
+        #nextHandler: IHandler
+        +SetNext(handler: IHandler): IHandler
+        +Handle(request: PasswordResetRequest)
+    }
+
+    class PasswordResetRequest {
+        +HasEmailToken: bool
+        +PassedMFA: bool
+        +VerifiedViaCorporateApp: bool
+    }
+
+    class EmailTokenHandler {
+        +Handle(request: PasswordResetRequest)
+    }
+
+    class MFAHandler {
+        +Handle(request: PasswordResetRequest)
+    }
+
+    class CorporateAppHandler {
+        +Handle(request: PasswordResetRequest)
+    }
+
+    class SupportDeskHandler {
+        +Handle(request: PasswordResetRequest)
+    }
+
+    IHandler <|.. AbstractHandler
+    AbstractHandler <|-- EmailTokenHandler
+    AbstractHandler <|-- MFAHandler
+    AbstractHandler <|-- CorporateAppHandler
+    AbstractHandler <|-- SupportDeskHandler
+    AbstractHandler o-- IHandler
+    EmailTokenHandler -- PasswordResetRequest
+    MFAHandler -- PasswordResetRequest
+    CorporateAppHandler -- PasswordResetRequest
+    SupportDeskHandler -- PasswordResetRequest
+```
+
+## Definición del problema 3 que se desean abordar:
 Unos investigadores están realizando diversas investigaciones y cada uno debe aplicar el método cientifico a ellas. El método cientifico es un proceso estructurado universal para obtener conocimiento confiable, por lo que tiene pasos bien definidos, aunque su implementación puede variar según el campo de estudio.
 
 El patrón Template Method es adecuado para este escenario, ya que podemos explicar un flujo regular con algunos pasos personalizados.
@@ -1058,7 +841,7 @@ researcher2.Execute();
     [Publicación] Resultados publicados en una revista científica.
 
 
-Ahora para añadir un nuevo cientifico e investigación sólo basta con crearlo uno y definir esos métodos especificos en su investigación:
+Ahora para añadir un nuevo cientifico e investigación sólo basta con crearlo y definir esos métodos especificos en su investigación:
 
 
 ```C#
@@ -1096,7 +879,39 @@ researcher3.Execute();
     [Publicación] Resultados publicados en una revista científica.
 
 
+### Diagrama UML 
 
-```C#
+``` mermaid
+classDiagram
+    class ScientificMethod {
+        <<abstract>>
+        +Execute(): void
+        #FormulateHypothesis(): void
+        #DesignExperiment(): void
+        #CollectData(): void
+        #AnalyzeResults(): void
+        #DrawConclusions(): void
+        #PublishFindings(): void
+    }
 
+    class VaccineResearcher {
+        #FormulateHypothesis()
+        #DesignExperiment()
+        #CollectData()
+        #AnalyzeResults()
+        #DrawConclusions()
+        #PublishFindings()
+    }
+
+    class MarsGravityScientist {
+        #FormulateHypothesis()
+        #DesignExperiment()
+        #CollectData()
+        #AnalyzeResults()
+        #DrawConclusions()
+        #PublishFindings()
+    }
+
+    ScientificMethod <|-- VaccineResearcher
+    ScientificMethod <|-- MarsGravityScientist
 ```
